@@ -1,11 +1,6 @@
 const mongoose = require('mongoose');
 
 const link = new mongoose.Schema({
-    email: { // Email of the user that created the link
-        type: String,
-        required: true
-    },
-
     shortURL: { // Shortened link
         type: String,
         required: true 

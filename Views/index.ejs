@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cliqit: Links made lightning-fast</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
 
@@ -31,7 +32,59 @@
 </head>
 
 <body>
-    <p>Hello world!</p>
+    <form id="form">
+        <label for="longURL">Long URL</label>
+        <input type="url" id="longURL" name="longURL" placeholder="https://example.com/" required />
+
+        <label for="shortURL">Short URL</label>
+        <input type="text" id="shortURL" name="shortURL" placeholder="https://cliqit.cc/xx-xx-xx/" minlength="4" maxlength="25" pattern="[A-Za-z0-9\-\_]" title="Must be either A-Z, 0-9, dash or underscore" required />
+
+        <label for="expiresAt">Expires At</label>
+        <input type="datetime-local" id="expiresAt" name="expiresAt" />
+
+        <input type="submit" value="Create!" />
+
+        <p id="message"></p>
+    </form>
+    <script>
+        function cliqitID(length) {
+            const characters = 'bDfHjKlNpRtVxZAcEgIkMoQsUwY-0123456789_BdFhJkLnPrTvXzaCeGiKmOqSuW';
+            let result = '';
+            const charactersLength = characters.length;
+
+            for (let i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+
+            return result;
+        }
+
+        document.getElementById('shortURL').value = cliqitID(Math.floor(Math.random() * (11 - 5) + 5));
+
+        // // // // //
+
+        $('#form').submit(function (event) {
+            event.preventDefault();
+
+            const longURL = $('#longURL').val();
+            const shortURL = $('#shortURL').val();
+            const expiresAt = $('#expiresAt').val();
+
+            $.post('/create', {
+                longURL: longURL,
+                shortURL: shortURL,
+                expiresAt: expiresAt
+            }, function (data) {
+                if (data.status === 'success') {
+                    $('#message').text(data.message);
+                } else if (data.status === 'warning') {
+                    $('#message').text(data.message);
+                } else {
+                    $('#message').text(data.message);
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
